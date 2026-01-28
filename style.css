@@ -1,131 +1,101 @@
-/* Fond général */
 body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #ff8ad4, #a855f7);
-  color: white;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ffb6e6, #cbb4ff);
   text-align: center;
   padding: 20px;
 }
 
-/* Titre principal */
 h1 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 5px #ff4fa3;
+  color: #4b0055;
 }
 
-/* Zone des fruits */
-.fruits {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.fruit {
-  background: white;
-  color: #a855f7;
-  border-radius: 25px;
-  padding: 15px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  width: 120px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-weight: bold;
-}
-
-.fruit img {
+.fruits img {
   width: 80px;
-  height: 80px;
-  margin-bottom: 8px;
-  object-fit: contain;
-}
-
-.fruit.selected {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px #fff;
-}
-
-/* Boutons */
-button {
-  border: none;
-  border-radius: 30px;
-  padding: 15px 25px;
-  font-size: 18px;
+  margin: 10px;
   cursor: pointer;
-  margin: 10px 5px;
-  transition: transform 0.2s, box-shadow 0.2s;
-  font-weight: bold;
+  transition: transform 0.2s;
 }
 
-#recetteBtn, #nouvelleRecetteBtn {
-  background: #ff4fa3;
-  color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+.fruits img:hover {
+  transform: scale(1.1);
 }
 
-#aleatoireBtn {
-  background: #ffb347;
-  color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+.zone-verre {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
 }
 
-#resetBtn {
-  background: #333;
-  color: white;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px #fff;
-}
-
-/* Résultat recette */
-#resultat {
-  background: rgba(255,255,255,0.9);
-  color: #333;
-  margin-top: 25px;
-  padding: 25px;
-  border-radius: 25px;
-  display: inline-block;
-  text-align: left;
-  max-width: 400px;
-  font-size: 1.1em;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-/* Compteur smoothies */
-#compteur {
-  margin-top: 15px;
-  font-weight: bold;
-  font-size: 1.2em;
-  text-shadow: 1px 1px 3px #ff4fa3;
-}
-
-/* Verre */
 #verre {
   position: relative;
-  margin: 20px auto;
-  width: 200px;
-  height: 300px;
+  width: 220px;
+  height: 350px;
 }
 
 #verre-img {
   width: 100%;
-  height: 100%;
-  object-fit: contain;
+  height: auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* ZONE INTERIEURE DU VERRE */
+#contenu-verre {
+  position: absolute;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 180px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 2px;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* Fruits dans le verre */
-.fruit-in-verre {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  opacity: 0;
-  pointer-events: none;
+.fruit-verre {
+  width: 45px;
+  animation: tomber 0.6s ease-out;
 }
+
+@keyframes tomber {
+  from {
+    transform: translateY(-120px) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.actions button {
+  margin: 10px;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: none;
+  background: #ff4fd8;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.actions button:hover {
+  background: #e600b8;
+}
+
+#recette {
+  margin-top: 20px;
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  display: inline-block;
+  min-width: 250px;
+}
+
+.compteur {
+  margin-top: 30px;
+}
+
