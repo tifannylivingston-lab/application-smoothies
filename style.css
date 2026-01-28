@@ -101,12 +101,6 @@ h1 {
   font-size: 1.2em;
 }
 
-/* QR code */
-#qr img {
-  width: 150px;
-  margin-top: 10px;
-}
-
 /* Responsive pour tablette / écran géant */
 @media (min-width: 768px) {
   .fruit {
