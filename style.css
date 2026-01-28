@@ -1,106 +1,97 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #ffb6e6, #cbb4ff);
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #ff8ad4, #a855f7);
+  color: white;
   text-align: center;
   padding: 20px;
 }
 
-h1 {
-  color: #4b0055;
-}
+h1 { font-size: 2.5em; margin-bottom: 10px; }
 
-/* FRUITS CHOIX */
-.fruits img {
-  width: 80px;
-  margin: 10px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.fruits img:hover {
-  transform: scale(1.1);
-}
-
-/* ZONE VERRE */
-.zone-verre {
+.fruits {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  margin: 30px 0;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.fruit {
+  background: white;
+  color: #a855f7;
+  border-radius: 25px;
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fruit img { width: 80px; height: 80px; margin-bottom: 8px; object-fit: contain; }
+.fruit p { margin: 0; font-weight: bold; }
+
+.fruit.selected {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px #fff;
+}
+
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 15px 25px;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 10px 5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#recetteBtn, #nouvelleRecetteBtn { background: #ff4fa3; color: white; }
+#aleatoireBtn { background: #ffb347; color: white; }
+#resetBtn { background: #333; color: white; }
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #fff;
+}
+
+#resultat {
+  background: rgba(255,255,255,0.95);
+  color: #333;
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 25px;
+  display: inline-block;
+  text-align: left;
+  max-width: 350px;
+  font-size: 1.1em;
+}
+
+#compteur {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 #verre {
   position: relative;
-  width: 220px;
-  height: 360px;
+  margin: 20px auto;
+  width: 200px;
+  height: 300px;
 }
 
-/* VERRE EN ARRIÈRE-PLAN */
 #verre-img {
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  z-index: 1; /* 👈 DERRIÈRE */
-  opacity: 0.85; /* effet verre */
-}
-
-/* CONTENU DEVANT */
-#contenu-verre {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140px;
-  height: 200px;
-
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-
-  z-index: 2; /* 👈 DEVANT LE VERRE */
+  height: 100%;
+  object-fit: contain;
   pointer-events: none;
 }
 
-/* FRUITS */
-.fruit-verre {
-  width: 42px;
-  margin-top: -6px;
-  animation: tomber 0.5s ease-out;
-}
-
-@keyframes tomber {
-  from {
-    transform: translateY(-120px) scale(0.7);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-}
-
-/* BOUTONS */
-.actions button {
-  margin: 10px;
-  padding: 12px 20px;
-  border-radius: 25px;
-  border: none;
-  background: #ff4fd8;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.actions button:hover {
-  background: #e600b8;
-}
-
-/* RECETTE */
-#recette {
-  margin-top: 20px;
-  background: white;
-  padding: 15px;
-  border-radius: 15px;
-  display: inline-block;
-  min-width: 260px;
+.fruit-in-verre {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  pointer-events: none;
 }
