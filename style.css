@@ -63,20 +63,29 @@ h1 {
 }
 
 /* Boutons principaux */
-#recetteBtn, #nouvelleRecetteBtn {
-  background: #ff4fa3;
-  color: white;
+#recetteBtn, #nouvelleRecetteBtn, #aleatoireBtn {
   border: none;
-  padding: 15px 25px;
   border-radius: 30px;
+  padding: 15px 25px;
   font-size: 18px;
   cursor: pointer;
   margin: 10px 5px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
+/* Styles couleurs */
+#recetteBtn, #nouvelleRecetteBtn {
+  background: #ff4fa3;
+  color: white;
+}
+
+#aleatoireBtn {
+  background: #ffb347;
+  color: white;
+}
+
 /* Effet au survol */
-#recetteBtn:hover, #nouvelleRecetteBtn:hover {
+#recetteBtn:hover, #nouvelleRecetteBtn:hover, #aleatoireBtn:hover {
   transform: scale(1.05);
   box-shadow: 0 0 15px #fff;
 }
@@ -101,6 +110,28 @@ h1 {
   font-size: 1.2em;
 }
 
+/* Verre pour drag & drop */
+#verre {
+  background: rgba(255,255,255,0.9);
+  border-radius: 25px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 300px;
+  min-height: 120px;
+  color: #333;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#verre.drag-over {
+  box-shadow: 0 0 20px #fff;
+}
+
 /* Responsive pour tablette / écran géant */
 @media (min-width: 768px) {
   .fruit {
@@ -115,7 +146,7 @@ h1 {
     max-width: 400px;
     font-size: 1.2em;
   }
-  #recetteBtn, #nouvelleRecetteBtn {
+  #recetteBtn, #nouvelleRecetteBtn, #aleatoireBtn {
     font-size: 20px;
     padding: 18px 30px;
   }
