@@ -1,3 +1,4 @@
+/* Fond général */
 body {
   font-family: 'Arial', sans-serif;
   background: linear-gradient(135deg, #ff8ad4, #a855f7);
@@ -6,8 +7,14 @@ body {
   padding: 20px;
 }
 
-h1 { font-size: 2.5em; margin-bottom: 10px; }
+/* Titre principal */
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 5px #ff4fa3;
+}
 
+/* Zone des fruits */
 .fruits {
   display: flex;
   flex-wrap: wrap;
@@ -27,16 +34,22 @@ h1 { font-size: 2.5em; margin-bottom: 10px; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-weight: bold;
 }
 
-.fruit img { width: 80px; height: 80px; margin-bottom: 8px; object-fit: contain; }
-.fruit p { margin: 0; font-weight: bold; }
+.fruit img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 8px;
+  object-fit: contain;
+}
 
 .fruit.selected {
   transform: scale(1.2);
   box-shadow: 0 0 20px #fff;
 }
 
+/* Boutons */
 button {
   border: none;
   border-radius: 30px;
@@ -45,35 +58,55 @@ button {
   cursor: pointer;
   margin: 10px 5px;
   transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: bold;
 }
 
-#recetteBtn, #nouvelleRecetteBtn { background: #ff4fa3; color: white; }
-#aleatoireBtn { background: #ffb347; color: white; }
-#resetBtn { background: #333; color: white; }
+#recetteBtn, #nouvelleRecetteBtn {
+  background: #ff4fa3;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#aleatoireBtn {
+  background: #ffb347;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#resetBtn {
+  background: #333;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
 
 button:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 15px #fff;
+  box-shadow: 0 0 20px #fff;
 }
 
+/* Résultat recette */
 #resultat {
-  background: rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.9);
   color: #333;
   margin-top: 25px;
   padding: 25px;
   border-radius: 25px;
   display: inline-block;
   text-align: left;
-  max-width: 350px;
+  max-width: 400px;
   font-size: 1.1em;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
+/* Compteur smoothies */
 #compteur {
   margin-top: 15px;
   font-weight: bold;
   font-size: 1.2em;
+  text-shadow: 1px 1px 3px #ff4fa3;
 }
 
+/* Verre */
 #verre {
   position: relative;
   margin: 20px auto;
@@ -88,6 +121,7 @@ button:hover {
   pointer-events: none;
 }
 
+/* Fruits dans le verre */
 .fruit-in-verre {
   position: absolute;
   width: 50px;
