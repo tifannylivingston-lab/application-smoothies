@@ -1,130 +1,132 @@
-const fruitsDivs = document.querySelectorAll(".fruit");
-const resultat = document.getElementById("resultat");
-const compteurDiv = document.getElementById("compteur");
-const verre = document.getElementById("verre");
-const verreImg = document.getElementById("verre-img");
-
-let fruitsSelectionnes = [];
-let posY = []; // position de chaque fruit dans le verre
-
-// --- Compteur persistant ---
-let compteurSmoothies = localStorage.getItem("compteurSmoothies");
-if(!compteurSmoothies) compteurSmoothies = 0;
-else compteurSmoothies = parseInt(compteurSmoothies);
-compteurDiv.innerHTML = `Smoothies générés : ${compteurSmoothies}`;
-
-function incrementerCompteur(){
-  compteurSmoothies++;
-  compteurDiv.innerHTML = `Smoothies générés : ${compteurSmoothies}`;
-  localStorage.setItem("compteurSmoothies", compteurSmoothies);
+/* Fond général */
+body {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #ff8ad4, #a855f7);
+  color: white;
+  text-align: center;
+  padding: 20px;
 }
 
-// --- Ajouter fruit dans le verre avec animation réelle ---
-function ajouterFruitVerre(fruit){
-  const divFruit = [...fruitsDivs].find(d => d.dataset.fruit === fruit);
-  if(!divFruit) return;
-
-  const clone = divFruit.querySelector("img").cloneNode(true);
-  clone.classList.add("fruit-in-verre");
-
-  const verreRect = verre.getBoundingClientRect();
-  const leftPos = 20 + Math.random() * (verreRect.width - 70); // position aléatoire
-  clone.style.left = leftPos + "px";
-
-  // hauteur empilée
-  const hauteur = verreRect.height - 50 - (posY.length * 40);
-  clone.style.top = "-60px"; // départ au-dessus
-
-  verre.appendChild(clone);
-
-  // Animation chute + rebond
-  clone.animate([
-    { transform: `translateY(0px) rotate(0deg)`, opacity: 0 },
-    { transform: `translateY(${hauteur + 20}px) rotate(${Math.random()*30-15}deg)`, opacity: 1 },
-    { transform: `translateY(${hauteur}px) rotate(0deg)`, opacity: 1 }
-  ], { duration: 1000, easing: 'ease-out', fill: 'forwards' });
-
-  posY.push(hauteur);
+/* Titre principal */
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 5px #ff4fa3;
 }
 
-// --- Clic sur fruit ---
-fruitsDivs.forEach(div => {
-  div.addEventListener("click", () => {
-    const fruit = div.dataset.fruit;
-    if(fruitsSelectionnes.includes(fruit)) return;
-    if(fruitsSelectionnes.length >= 5){
-      alert("❌ Maximum 5 fruits !");
-      return;
-    }
-    fruitsSelectionnes.push(fruit);
-    div.classList.add("selected");
-    ajouterFruitVerre(fruit);
-  });
-});
-
-// --- Bouton Nouvelle recette ---
-document.getElementById("nouvelleRecetteBtn").addEventListener("click", () => {
-  fruitsSelectionnes = [];
-  fruitsDivs.forEach(div => div.classList.remove("selected"));
-  resultat.innerHTML = "";
-  verre.innerHTML = '<img src="verre.png" alt="Verre à smoothie" id="verre-img">';
-  posY = [];
-});
-
-// --- Bouton Voir recette ---
-document.getElementById("recetteBtn").addEventListener("click", () => {
-  const nbFruits = fruitsSelectionnes.length;
-  if(nbFruits < 2){
-    resultat.innerHTML = "❌ Choisis au moins 2 fruits !";
-    return;
-  }
-
-  let quantiteParFruit;
-  if(nbFruits === 2) quantiteParFruit = 75;
-  else if(nbFruits === 3) quantiteParFruit = 50;
-  else if(nbFruits === 4) quantiteParFruit = 38;
-  else quantiteParFruit = 30;
-
-  let message;
-  if(nbFruits === 2) message = "Goût intense 💥";
-  else if(nbFruits === 3) message = "Équilibre parfait ⚖️";
-  else if(nbFruits === 4) message = "Cocktail vitaminé 🌈";
-  else message = "Le smoothie ultime 🔥";
-
-  let html = `<h2>🍹 Ta recette personnalisée</h2>`;
-  html += `<p>${message}</p><ul>`;
-  fruitsSelectionnes.forEach(fruit => html += `<li>${fruit} : ${quantiteParFruit} g</li>`);
-  html += `</ul><p><strong>Liquide :</strong> 100 ml</p>`;
-  resultat.innerHTML = html;
-
-  incrementerCompteur();
-});
-
-// --- Bouton Aléatoire ---
-document.getElementById("aleatoireBtn").addEventListener("click", () => {
-  document.getElementById("nouvelleRecetteBtn").click();
-  const nb = Math.floor(Math.random()*4)+2; // 2 à 5 fruits
-  const fruits = ["Pomme","Poire","Clémentine","Fraise","Kiwi"];
-  const shuffle = fruits.sort(()=>0.5-Math.random());
-  const selection = shuffle.slice(0, nb);
-  selection.forEach(fruit => {
-    fruitsSelectionnes.push(fruit);
-    const divFruit = [...fruitsDivs].find(d=>d.dataset.fruit===fruit);
-    if(divFruit) divFruit.classList.add("selected");
-    ajouterFruitVerre(fruit);
-  });
-});
-
-// --- Bouton Reset admin ---
-const motDePasse = "admin123";
-if(prompt("Mot de passe admin pour gestion compteur :") === motDePasse){
-  document.getElementById("resetBtn").style.display = "inline-block";
+/* Zone des fruits */
+.fruits {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
 }
 
-document.getElementById("resetBtn").addEventListener("click", ()=>{
-  if(confirm("⚠️ Remettre le compteur à zéro ?")){
-    compteurSmoothies = 0;
-    localStorage.setItem("compteurSmoothies", compteurSmoothies);
-    compteurDiv.innerHTML = `Smoothies générés : ${compteurSmoothies}`;
-  }
-});
+.fruit {
+  background: white;
+  color: #a855f7;
+  border-radius: 25px;
+  padding: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+}
+
+.fruit img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 8px;
+  object-fit: contain;
+}
+
+.fruit.selected {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px #fff;
+}
+
+/* Boutons */
+button {
+  border: none;
+  border-radius: 30px;
+  padding: 15px 25px;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 10px 5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-weight: bold;
+}
+
+#recetteBtn, #nouvelleRecetteBtn {
+  background: #ff4fa3;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#aleatoireBtn {
+  background: #ffb347;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#resetBtn {
+  background: #333;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #fff;
+}
+
+/* Résultat recette */
+#resultat {
+  background: rgba(255,255,255,0.9);
+  color: #333;
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 25px;
+  display: inline-block;
+  text-align: left;
+  max-width: 400px;
+  font-size: 1.1em;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Compteur smoothies */
+#compteur {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 1.2em;
+  text-shadow: 1px 1px 3px #ff4fa3;
+}
+
+/* Verre */
+#verre {
+  position: relative;
+  margin: 20px auto;
+  width: 200px;
+  height: 300px;
+}
+
+#verre-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Fruits dans le verre */
+.fruit-in-verre {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  opacity: 0;
+  pointer-events: none;
+}
+
