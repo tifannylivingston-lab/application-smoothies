@@ -7,36 +7,36 @@
 </head>
 <body>
 
-<h1>🍓 Compose ton smoothie</h1>
+  <h1>🍹 Vélo Smoothie</h1>
+  <p>Clique sur les fruits pour les faire tomber dans le verre</p>
 
-<div class="fruits">
-  <img src="pomme.png" data-fruit="pomme">
-  <img src="poire.png" data-fruit="poire">
-  <img src="clementine.png" data-fruit="clementine">
-  <img src="fraise.png" data-fruit="fraise">
-  <img src="kiwi.png" data-fruit="kiwi">
-</div>
+  <div class="fruits">
+    <div class="fruit" data-fruit="Pomme"><img src="pomme.png"><span>Pomme</span></div>
+    <div class="fruit" data-fruit="Poire"><img src="poire.png"><span>Poire</span></div>
+    <div class="fruit" data-fruit="Clémentine"><img src="clementine.png"><span>Clémentine</span></div>
+    <div class="fruit" data-fruit="Fraise"><img src="fraise.png"><span>Fraise</span></div>
+    <div class="fruit" data-fruit="Kiwi"><img src="kiwi.png"><span>Kiwi</span></div>
+  </div>
 
-<div class="zone-verre">
+  <div class="actions">
+    <button id="recetteBtn">Voir ma recette 🍹</button>
+    <button id="nouvelleRecetteBtn">Nouvelle recette 🔄</button>
+    <button id="aleatoireBtn">🎲 Aléatoire</button>
+    <button id="resetBtn">🔒 Compteur à zéro</button>
+  </div>
+
+  <div id="compteur">Smoothies générés : 0</div>
+
+  <!-- VERRE -->
   <div id="verre">
     <img src="verre.png" id="verre-img">
-    <div id="contenu-verre"></div>
+
+    <!-- ZONE INTERNE DU VERRE -->
+    <div id="zone-verre"></div>
   </div>
-</div>
 
-<div class="actions">
-  <button id="btn-recette">Voir la recette</button>
-  <button id="btn-random">🎲 Recette aléatoire</button>
-  <button id="btn-reset">🔄 Nouveau smoothie</button>
-</div>
+  <div id="resultat"></div>
 
-<div id="recette"></div>
-
-<div class="compteur">
-  Smoothies réalisés : <span id="compteur">0</span><br>
-  <button id="reset-compteur">🔐 Remettre le compteur à zéro</button>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
