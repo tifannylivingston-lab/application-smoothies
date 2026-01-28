@@ -9,7 +9,7 @@ h1 {
   color: #4b0055;
 }
 
-/* FRUITS */
+/* FRUITS CHOIX */
 .fruits img {
   width: 80px;
   margin: 10px;
@@ -32,13 +32,22 @@ h1 {
   position: relative;
   width: 220px;
   height: 360px;
-  overflow: hidden; /* ✅ LE MASQUE */
 }
 
-/* CONTENU DU VERRE */
+/* VERRE EN ARRIÈRE-PLAN */
+#verre-img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1; /* 👈 DERRIÈRE */
+  opacity: 0.85; /* effet verre */
+}
+
+/* CONTENU DEVANT */
 #contenu-verre {
   position: absolute;
-  bottom: 35px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
   width: 140px;
@@ -48,11 +57,11 @@ h1 {
   flex-direction: column-reverse;
   align-items: center;
 
-  z-index: 2; /* fruits */
+  z-index: 2; /* 👈 DEVANT LE VERRE */
   pointer-events: none;
 }
 
-/* FRUITS DANS LE VERRE */
+/* FRUITS */
 .fruit-verre {
   width: 42px;
   margin-top: -6px;
@@ -68,16 +77,6 @@ h1 {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
-}
-
-/* IMAGE DU VERRE AU-DESSUS */
-#verre-img {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1; /* 👈 DERRIERE LES FRUITS */
-  pointer-events: none;
 }
 
 /* BOUTONS */
