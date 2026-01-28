@@ -48,7 +48,7 @@ h1 {
   flex-direction: column-reverse;
   align-items: center;
 
-  z-index: 1; /* fruits */
+  z-index: 3; /* fruits */
   pointer-events: none;
 }
 
