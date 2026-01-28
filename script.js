@@ -1,79 +1,108 @@
-const fruits = document.querySelectorAll('.fruits img');
-const contenuVerre = document.getElementById('contenu-verre');
-const recetteDiv = document.getElementById('recette');
-const compteurSpan = document.getElementById('compteur');
+const fruitsDivs = document.querySelectorAll(".fruit");
+const zoneVerre = document.getElementById("zone-verre");
+const resultat = document.getElementById("resultat");
+const compteurDiv = document.getElementById("compteur");
 
-let fruitsChoisis = [];
-let compteur = localStorage.getItem('compteurSmoothie') || 0;
-compteurSpan.textContent = compteur;
+let fruitsSelectionnes = [];
+let hauteurFruits = 0;
 
-const recettes = {
-  pomme: "1/2 pomme",
-  poire: "1/2 poire",
-  clementine: "1 clémentine",
-  fraise: "4 fraises",
-  kiwi: "1 kiwi"
-};
+/* COMPTEUR PERSISTANT */
+let compteur = localStorage.getItem("compteurSmoothies");
+if (!compteur) compteur = 0;
+compteur = parseInt(compteur);
+compteurDiv.textContent = `Smoothies générés : ${compteur}`;
 
-fruits.forEach(fruit => {
-  fruit.addEventListener('click', () => {
-    if (fruitsChoisis.length >= 5) return;
+function incrementerCompteur() {
+  compteur++;
+  localStorage.setItem("compteurSmoothies", compteur);
+  compteurDiv.textContent = `Smoothies générés : ${compteur}`;
+}
 
-    const nom = fruit.dataset.fruit;
-    fruitsChoisis.push(nom);
+/* AJOUT FRUIT DANS LE VERRE */
+function ajouterFruitVerre(fruit) {
+  const divFruit = [...fruitsDivs].find(f => f.dataset.fruit === fruit);
+  const img = divFruit.querySelector("img").cloneNode(true);
 
-    const img = document.createElement('img');
-    img.src = fruit.src;
-    img.className = 'fruit-verre';
+  img.classList.add("fruit-in-verre");
+  img.style.left = Math.random() * (zoneVerre.clientWidth - 45) + "px";
+  img.style.top = "-60px";
 
-    contenuVerre.appendChild(img);
+  zoneVerre.appendChild(img);
+
+  const yFinal = zoneVerre.clientHeight - 45 - hauteurFruits;
+  hauteurFruits += 35;
+
+  img.animate([
+    { transform: "translateY(0)", opacity: 0 },
+    { transform: `translateY(${yFinal}px) rotate(${Math.random()*30-15}deg)`, opacity: 1 }
+  ], {
+    duration: 900,
+    easing: "ease-out",
+    fill: "forwards"
+  });
+}
+
+/* CLIC FRUITS */
+fruitsDivs.forEach(div => {
+  div.addEventListener("click", () => {
+    const fruit = div.dataset.fruit;
+    if (fruitsSelectionnes.includes(fruit) || fruitsSelectionnes.length >= 5) return;
+
+    fruitsSelectionnes.push(fruit);
+    div.classList.add("selected");
+    ajouterFruitVerre(fruit);
   });
 });
 
-document.getElementById('btn-recette').onclick = () => {
-  if (fruitsChoisis.length < 2) {
-    recetteDiv.innerHTML = "👉 Choisis au moins 2 fruits";
+/* NOUVELLE RECETTE */
+document.getElementById("nouvelleRecetteBtn").onclick = () => {
+  fruitsSelectionnes = [];
+  hauteurFruits = 0;
+  zoneVerre.innerHTML = "";
+  resultat.innerHTML = "";
+  fruitsDivs.forEach(f => f.classList.remove("selected"));
+};
+
+/* RECETTE */
+document.getElementById("recetteBtn").onclick = () => {
+  if (fruitsSelectionnes.length < 2) {
+    resultat.innerHTML = "❌ Choisis au moins 2 fruits";
     return;
   }
 
-  let texte = `<strong>Smoothie ${fruitsChoisis.length} fruits</strong><br>`;
-  fruitsChoisis.forEach(f => texte += `${recettes[f]}<br>`);
-  texte += "<br>Ajoute un peu d’eau ou de jus 🍹";
+  const q = fruitsSelectionnes.length === 2 ? 75 :
+            fruitsSelectionnes.length === 3 ? 50 :
+            fruitsSelectionnes.length === 4 ? 38 : 30;
 
-  recetteDiv.innerHTML = texte;
+  resultat.innerHTML = `
+    <h3>🍹 Ta recette</h3>
+    <ul>${fruitsSelectionnes.map(f => `<li>${f} : ${q} g</li>`).join("")}</ul>
+    <p><strong>+ 100 ml d’eau ou jus</strong></p>
+  `;
 
-  compteur++;
-  localStorage.setItem('compteurSmoothie', compteur);
-  compteurSpan.textContent = compteur;
+  incrementerCompteur();
 };
 
-document.getElementById('btn-reset').onclick = () => {
-  fruitsChoisis = [];
-  contenuVerre.innerHTML = "";
-  recetteDiv.innerHTML = "";
-};
-
-document.getElementById('btn-random').onclick = () => {
-  fruitsChoisis = [];
-  contenuVerre.innerHTML = "";
-
-  const noms = Object.keys(recettes).sort(() => 0.5 - Math.random()).slice(0, 3);
-  noms.forEach(nom => {
-    fruitsChoisis.push(nom);
-    const img = document.createElement('img');
-    img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
-    img.className = 'fruit-verre';
-    contenuVerre.appendChild(img);
+/* ALÉATOIRE */
+document.getElementById("aleatoireBtn").onclick = () => {
+  document.getElementById("nouvelleRecetteBtn").click();
+  const fruits = ["Pomme","Poire","Clémentine","Fraise","Kiwi"];
+  fruits.sort(() => 0.5 - Math.random());
+  fruits.slice(0, Math.floor(Math.random()*4)+2).forEach(f => {
+    fruitsSelectionnes.push(f);
+    document.querySelector(`[data-fruit="${f}"]`).classList.add("selected");
+    ajouterFruitVerre(f);
   });
 };
 
-document.getElementById('reset-compteur').onclick = () => {
-  const mdp = prompt("Mot de passe propriétaire :");
-  if (mdp === "smoothie2024") {
+/* RESET COMPTEUR */
+document.getElementById("resetBtn").onclick = () => {
+  const mdp = prompt("Mot de passe administrateur :");
+  if (mdp === "admin123") {
     compteur = 0;
-    localStorage.setItem('compteurSmoothie', 0);
-    compteurSpan.textContent = 0;
+    localStorage.setItem("compteurSmoothies", 0);
+    compteurDiv.textContent = "Smoothies générés : 0";
   } else {
-    alert("Mot de passe incorrect ❌");
+    alert("❌ Mot de passe incorrect");
   }
 };
