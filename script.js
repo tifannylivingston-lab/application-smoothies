@@ -1,124 +1,108 @@
 const fruitsDivs = document.querySelectorAll(".fruit");
+const zoneVerre = document.getElementById("zone-verre");
 const resultat = document.getElementById("resultat");
 const compteurDiv = document.getElementById("compteur");
-const verre = document.getElementById("verre");
 
 let fruitsSelectionnes = [];
-let posY = [];
+let hauteurFruits = 0;
 
-// --- Compteur persistant ---
-let compteurSmoothies = localStorage.getItem("compteurSmoothies");
-if(!compteurSmoothies) compteurSmoothies = 0;
-else compteurSmoothies = parseInt(compteurSmoothies);
-compteurDiv.innerHTML = `Smoothies générés : ${compteurSmoothies}`;
+/* COMPTEUR PERSISTANT */
+let compteur = localStorage.getItem("compteurSmoothies");
+if (!compteur) compteur = 0;
+compteur = parseInt(compteur);
+compteurDiv.textContent = `Smoothies générés : ${compteur}`;
 
-function incrementerCompteur(){
-  compteurSmoothies++;
-  compteurDiv.innerHTML = `Smoothies générés : ${compteurSmoothies}`;
-  localStorage.setItem("compteurSmoothies", compteurSmoothies);
+function incrementerCompteur() {
+  compteur++;
+  localStorage.setItem("compteurSmoothies", compteur);
+  compteurDiv.textContent = `Smoothies générés : ${compteur}`;
 }
 
-// --- Ajouter fruit dans le verre ---
-function ajouterFruitVerre(fruit){
-  const divFruit = [...fruitsDivs].find(d => d.dataset.fruit === fruit);
-  if(!divFruit) return;
+/* AJOUT FRUIT DANS LE VERRE */
+function ajouterFruitVerre(fruit) {
+  const divFruit = [...fruitsDivs].find(f => f.dataset.fruit === fruit);
+  const img = divFruit.querySelector("img").cloneNode(true);
 
-  const clone = divFruit.querySelector("img").cloneNode(true);
-  clone.classList.add("fruit-in-verre");
+  img.classList.add("fruit-in-verre");
+  img.style.left = Math.random() * (zoneVerre.clientWidth - 45) + "px";
+  img.style.top = "-60px";
 
-  const verreRect = verre.getBoundingClientRect();
-  const leftPos = Math.random() * (verre.clientWidth - 50);
-  clone.style.left = leftPos + "px";
-  clone.style.top = "-60px";
-  verre.appendChild(clone);
+  zoneVerre.appendChild(img);
 
-  const hauteur = verre.clientHeight - 50 - (posY.length * 40);
-  posY.push(hauteur);
+  const yFinal = zoneVerre.clientHeight - 45 - hauteurFruits;
+  hauteurFruits += 35;
 
-  clone.animate([
-    { transform: "translateY(0px) rotate(0deg)", opacity: 0 },
-    { transform: `translateY(${hauteur}px) rotate(${Math.random()*30-15}deg)`, opacity: 1 }
-  ], { duration: 1000, easing: 'ease-out', fill: 'forwards' });
+  img.animate([
+    { transform: "translateY(0)", opacity: 0 },
+    { transform: `translateY(${yFinal}px) rotate(${Math.random()*30-15}deg)`, opacity: 1 }
+  ], {
+    duration: 900,
+    easing: "ease-out",
+    fill: "forwards"
+  });
 }
 
-// --- Clic sur fruit ---
+/* CLIC FRUITS */
 fruitsDivs.forEach(div => {
   div.addEventListener("click", () => {
     const fruit = div.dataset.fruit;
-    if(fruitsSelectionnes.includes(fruit)) return;
-    if(fruitsSelectionnes.length >= 5){
-      alert("❌ Maximum 5 fruits !");
-      return;
-    }
+    if (fruitsSelectionnes.includes(fruit) || fruitsSelectionnes.length >= 5) return;
+
     fruitsSelectionnes.push(fruit);
     div.classList.add("selected");
     ajouterFruitVerre(fruit);
   });
 });
 
-// --- Nouvelle recette ---
-document.getElementById("nouvelleRecetteBtn").addEventListener("click", () => {
+/* NOUVELLE RECETTE */
+document.getElementById("nouvelleRecetteBtn").onclick = () => {
   fruitsSelectionnes = [];
-  fruitsDivs.forEach(div => div.classList.remove("selected"));
+  hauteurFruits = 0;
+  zoneVerre.innerHTML = "";
   resultat.innerHTML = "";
-  verre.innerHTML = '<img src="verre.png" alt="Verre à smoothie" id="verre-img">';
-  posY = [];
-});
+  fruitsDivs.forEach(f => f.classList.remove("selected"));
+};
 
-// --- Voir recette ---
-document.getElementById("recetteBtn").addEventListener("click", () => {
-  const nbFruits = fruitsSelectionnes.length;
-  if(nbFruits < 2){
-    resultat.innerHTML = "❌ Choisis au moins 2 fruits !";
+/* RECETTE */
+document.getElementById("recetteBtn").onclick = () => {
+  if (fruitsSelectionnes.length < 2) {
+    resultat.innerHTML = "❌ Choisis au moins 2 fruits";
     return;
   }
 
-  let quantiteParFruit;
-  if(nbFruits === 2) quantiteParFruit = 75;
-  else if(nbFruits === 3) quantiteParFruit = 50;
-  else if(nbFruits === 4) quantiteParFruit = 38;
-  else quantiteParFruit = 30;
+  const q = fruitsSelectionnes.length === 2 ? 75 :
+            fruitsSelectionnes.length === 3 ? 50 :
+            fruitsSelectionnes.length === 4 ? 38 : 30;
 
-  let message;
-  if(nbFruits === 2) message = "Goût intense 💥";
-  else if(nbFruits === 3) message = "Équilibre parfait ⚖️";
-  else if(nbFruits === 4) message = "Cocktail vitaminé 🌈";
-  else message = "Le smoothie ultime 🔥";
-
-  let html = `<h2>🍹 Ta recette personnalisée</h2>`;
-  html += `<p>${message}</p><ul>`;
-  fruitsSelectionnes.forEach(fruit => html += `<li>${fruit} : ${quantiteParFruit} g</li>`);
-  html += `</ul><p><strong>Liquide :</strong> 100 ml</p>`;
-  resultat.innerHTML = html;
+  resultat.innerHTML = `
+    <h3>🍹 Ta recette</h3>
+    <ul>${fruitsSelectionnes.map(f => `<li>${f} : ${q} g</li>`).join("")}</ul>
+    <p><strong>+ 100 ml d’eau ou jus</strong></p>
+  `;
 
   incrementerCompteur();
-});
+};
 
-// --- Bouton aléatoire ---
-document.getElementById("aleatoireBtn").addEventListener("click", () => {
+/* ALÉATOIRE */
+document.getElementById("aleatoireBtn").onclick = () => {
   document.getElementById("nouvelleRecetteBtn").click();
-  const nb = Math.floor(Math.random()*4)+2;
   const fruits = ["Pomme","Poire","Clémentine","Fraise","Kiwi"];
-  const shuffle = fruits.sort(()=>0.5-Math.random());
-  const selection = shuffle.slice(0, nb);
-  selection.forEach(fruit => {
-    fruitsSelectionnes.push(fruit);
-    const divFruit = [...fruitsDivs].find(d=>d.dataset.fruit===fruit);
-    if(divFruit) divFruit.classList.add("selected");
-    ajouterFruitVerre(fruit);
+  fruits.sort(() => 0.5 - Math.random());
+  fruits.slice(0, Math.floor(Math.random()*4)+2).forEach(f => {
+    fruitsSelectionnes.push(f);
+    document.querySelector(`[data-fruit="${f}"]`).classList.add("selected");
+    ajouterFruitVerre(f);
   });
-});
+};
 
-// --- Bouton reset avec mot de passe ---
-document.getElementById("resetBtn").addEventListener("click", ()=>{
-  const motDePasse = prompt("🔒 Mot de passe administrateur pour remettre le compteur à zéro :");
-  if(motDePasse === "admin123"){ // changer le mot de passe si tu veux
-    if(confirm("⚠️ Remettre le compteur à zéro ?")){
-      compteurSmoothies = 0;
-      localStorage.setItem("compteurSmoothies", compteurSmoothies);
-      compteurDiv.innerHTML = `Smoothies générés : ${compteurSmoothies}`;
-    }
+/* RESET COMPTEUR */
+document.getElementById("resetBtn").onclick = () => {
+  const mdp = prompt("Mot de passe administrateur :");
+  if (mdp === "admin123") {
+    compteur = 0;
+    localStorage.setItem("compteurSmoothies", 0);
+    compteurDiv.textContent = "Smoothies générés : 0";
   } else {
-    alert("❌ Mot de passe incorrect !");
+    alert("❌ Mot de passe incorrect");
   }
-});
+};
