@@ -48,7 +48,7 @@ h1 {
   flex-direction: column-reverse;
   align-items: center;
 
-  z-index: 3; /* fruits */
+  z-index: 2; /* fruits */
   pointer-events: none;
 }
 
@@ -76,7 +76,7 @@ h1 {
   bottom: 0;
   left: 0;
   width: 100%;
-  z-index: 2; /* 👈 DEVANT LES FRUITS */
+  z-index: 1; /* 👈 DERRIERE LES FRUITS */
   pointer-events: none;
 }
 
