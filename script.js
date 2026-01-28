@@ -8,20 +8,41 @@ let fruitsSelectionnes = [];
 let compteurSmoothies = 0;
 
 // ------------------------
+// Fonction animation immersive
+// ------------------------
+function ajouterFruitVerre(fruit) {
+  const divFruit = [...fruitsDivs].find(d => d.dataset.fruit === fruit);
+  if(!divFruit) return;
+
+  const clone = divFruit.querySelector("img").cloneNode(true);
+  clone.classList.add("fruit-in-verre");
+
+  // Supprimer le texte initial si premier fruit
+  const texteVerre = verre.querySelector("p");
+  if(texteVerre) texteVerre.style.display = "none";
+
+  verre.appendChild(clone);
+}
+
+// ------------------------
 // Sélection des fruits clic
 // ------------------------
 fruitsDivs.forEach(div => {
-  div.setAttribute("draggable", true); // pour drag & drop
+  div.setAttribute("draggable", true);
 
   div.addEventListener("click", () => {
     const fruit = div.dataset.fruit;
     if(fruitsSelectionnes.includes(fruit)){
       fruitsSelectionnes = fruitsSelectionnes.filter(f => f !== fruit);
       div.classList.remove("selected");
+      // enlever fruit du verre
+      const img = [...verre.querySelectorAll("img")].find(i => i.src.includes(fruit.toLowerCase()));
+      if(img) img.remove();
     } else {
       if(fruitsSelectionnes.length < 5){
         fruitsSelectionnes.push(fruit);
         div.classList.add("selected");
+        ajouterFruitVerre(fruit);
       } else {
         alert("❌ Maximum 5 fruits !");
       }
@@ -35,7 +56,7 @@ fruitsDivs.forEach(div => {
 });
 
 // ------------------------
-// Drag & Drop dans le verre
+// Drag & Drop
 // ------------------------
 verre.addEventListener("dragover", (e) => {
   e.preventDefault();
@@ -57,12 +78,12 @@ verre.addEventListener("drop", (e) => {
       fruitsDivs.forEach(div => {
         if(div.dataset.fruit === fruit) div.classList.add("selected");
       });
+      ajouterFruitVerre(fruit);
     } else {
       alert("❌ Maximum 5 fruits !");
     }
   }
 
-  // Générer recette automatiquement
   document.getElementById("recetteBtn").click();
 });
 
@@ -73,6 +94,8 @@ document.getElementById("nouvelleRecetteBtn").addEventListener("click", () => {
   fruitsSelectionnes = [];
   fruitsDivs.forEach(div => div.classList.remove("selected"));
   resultat.innerHTML = "";
+  // vider le verre
+  verre.innerHTML = '<p>Glisse les fruits ici 🍹</p>';
 });
 
 // ------------------------
@@ -115,20 +138,22 @@ document.getElementById("recetteBtn").addEventListener("click", () => {
 });
 
 // ------------------------
-// Bouton Aléatoire "Surprends-moi"
+// Bouton Aléatoire
 // ------------------------
 document.getElementById("aleatoireBtn").addEventListener("click", () => {
   fruitsSelectionnes = [];
   fruitsDivs.forEach(div => div.classList.remove("selected"));
+  verre.innerHTML = '<p>Glisse les fruits ici 🍹</p>';
 
   const nb = Math.floor(Math.random() * 4) + 2; // 2 à 5 fruits
   const fruits = ["Pomme","Poire","Clémentine","Fraise","Kiwi"];
   const shuffle = fruits.sort(() => 0.5 - Math.random());
   fruitsSelectionnes = shuffle.slice(0, nb);
 
-  // mise à jour visuelle
-  fruitsDivs.forEach(div => {
-    if(fruitsSelectionnes.includes(div.dataset.fruit)) div.classList.add("selected");
+  fruitsSelectionnes.forEach(fruit => {
+    const divFruit = [...fruitsDivs].find(d => d.dataset.fruit === fruit);
+    if(divFruit) divFruit.classList.add("selected");
+    ajouterFruitVerre(fruit);
   });
 
   document.getElementById("recetteBtn").click();
