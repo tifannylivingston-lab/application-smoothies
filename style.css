@@ -6,48 +6,60 @@ body {
   padding: 20px;
 }
 
-h1 {
-  font-size: 2.2em;
-}
+h1 { font-size: 2.2em; }
+
+#objectif { margin: 15px 0; }
 
 .fruits {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
   margin: 20px 0;
 }
 
 .fruit {
   background: white;
   color: #a855f7;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 30px;
-  font-size: 16px;
+  border-radius: 20px;
+  padding: 10px;
   cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100px;
 }
+
+.fruit img { width: 60px; height: 60px; }
 
 .fruit.selected {
-  background: #a855f7;
-  color: white;
+  transform: scale(1.2);
+  box-shadow: 0 0 15px #fff;
 }
 
-#recetteBtn {
+#recetteBtn, #nouvelleRecetteBtn {
   background: #ff4fa3;
   color: white;
   border: none;
-  padding: 15px 25px;
+  padding: 12px 20px;
   border-radius: 30px;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
+  margin: 10px 5px;
 }
 
 #resultat {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255,255,255,0.9);
   color: #333;
   margin-top: 25px;
   padding: 20px;
   border-radius: 20px;
+  display: inline-block;
+  text-align: left;
+  max-width: 300px;
 }
+
+#compteur {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+#qr img { width: 120px; margin-top: 10px; }
