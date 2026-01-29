@@ -24,7 +24,7 @@ fruits.forEach(fruit => {
   });
 });
 
-// Fonction pour afficher les fruits en quincunx et ajuster la taille
+// Fonction pour afficher les fruits en quincunx et centrés
 function afficherFruits() {
   contenuVerre.innerHTML = ""; // vider avant de réafficher
 
@@ -38,21 +38,19 @@ function afficherFruits() {
     img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
     img.className = 'fruit-verre';
     img.style.position = 'absolute';
-    img.style.left = '50%';
-
+    
     // Ajustement dynamique de la taille selon le nombre de fruits
-    let taille = 50; // par défaut
+    let taille = 50; // valeur par défaut
     if(n === 1) taille = 70;
     else if(n === 2) taille = 60;
     else if(n === 3) taille = 55;
     else if(n >= 4) taille = 45;
     img.style.width = taille + 'px';
 
-    // position verticale proportionnelle depuis le bas
-    let y = baseY + (i / n) * (hauteurVerre - taille - 20); 
-    // 20 pour laisser un petit espace en haut
+    // Position verticale proportionnelle depuis le bas
+    let y = baseY + (i / n) * (hauteurVerre - taille - 20);
 
-    // position horizontale quincunx
+    // Position horizontale quincunx
     let x;
     if (n === 1) x = 0;
     else if (n === 2) x = i === 0 ? -xSpread/2 : xSpread/2;
@@ -60,8 +58,10 @@ function afficherFruits() {
     else if (n === 4) x = i === 0 ? -xSpread : i === 1 ? xSpread : i === 2 ? -xSpread/2 : xSpread/2;
     else x = i === 0 ? -xSpread : i === 1 ? xSpread : i === 2 ? -xSpread/2 : i === 3 ? xSpread/2 : 0;
 
+    // CENTRAGE + décalage quincunx
+    img.style.left = '50%';
     img.style.bottom = y + 'px';
-    img.style.transform = `translateX(${x}px)`;
+    img.style.transform = `translateX(${x}px) translateX(-50%)`;
 
     contenuVerre.appendChild(img);
   });
