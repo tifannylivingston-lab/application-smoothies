@@ -19,52 +19,42 @@ const recettes = {
 fruits.forEach(fruit => {
   fruit.addEventListener('click', () => {
     if (fruitsChoisis.length >= 5) return;
-    fruitsChoisis.push(fruit.dataset.fruit);
-    afficherFruits();
+    const nom = fruit.dataset.fruit;
+    fruitsChoisis.push(nom);
+    ajouterFruit(nom);
   });
 });
 
-// Fonction pour afficher les fruits en quincunx et centrés
-function afficherFruits() {
-  contenuVerre.innerHTML = ""; // vider avant de réafficher
+// Fonction pour ajouter un fruit individuellement
+function ajouterFruit(nom) {
+  const img = document.createElement('img');
+  img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
+  img.className = 'fruit-verre';
+  img.style.position = 'absolute';
+  img.style.left = '50%';
 
-  const n = fruitsChoisis.length;
-  const baseY = 10; // distance depuis le fond du verre
-  const hauteurVerre = 250; // hauteur de #contenu-verre
-  const xSpread = 40; // écart horizontal max
+  // Taille dynamique selon le nombre actuel de fruits
+  let nFruits = fruitsChoisis.length;
+  let taille = 50;
+  if(nFruits === 1) taille = 70;
+  else if(nFruits === 2) taille = 60;
+  else if(nFruits === 3) taille = 55;
+  else if(nFruits >= 4) taille = 45;
+  img.style.width = taille + 'px';
 
-  fruitsChoisis.forEach((nom, i) => {
-    const img = document.createElement('img');
-    img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
-    img.className = 'fruit-verre';
-    img.style.position = 'absolute';
-    
-    // Ajustement dynamique de la taille selon le nombre de fruits
-    let taille = 50; // valeur par défaut
-    if(n === 1) taille = 70;
-    else if(n === 2) taille = 60;
-    else if(n === 3) taille = 55;
-    else if(n >= 4) taille = 45;
-    img.style.width = taille + 'px';
-
-    // Position verticale proportionnelle depuis le bas
-    let y = baseY + (i / n) * (hauteurVerre - taille - 20);
-
-    // Position horizontale quincunx
-    let x;
-    if (n === 1) x = 0;
-    else if (n === 2) x = i === 0 ? -xSpread/2 : xSpread/2;
-    else if (n === 3) x = i === 0 ? -xSpread : i === 1 ? xSpread : 0;
-    else if (n === 4) x = i === 0 ? -xSpread : i === 1 ? xSpread : i === 2 ? -xSpread/2 : xSpread/2;
-    else x = i === 0 ? -xSpread : i === 1 ? xSpread : i === 2 ? -xSpread/2 : i === 3 ? xSpread/2 : 0;
-
-    // CENTRAGE + décalage quincunx
-    img.style.left = '50%';
-    img.style.bottom = y + 'px';
-    img.style.transform = `translateX(${x}px) translateX(-50%)`;
-
-    contenuVerre.appendChild(img);
+  // Calcul bottom = cumul des hauteurs des fruits déjà présents
+  let totalHauteur = 0;
+  contenuVerre.querySelectorAll('.fruit-verre').forEach(f => {
+    totalHauteur += f.offsetHeight * 0.9; // léger recouvrement
   });
+  img.style.bottom = totalHauteur + 'px';
+
+  // Décalage horizontal pour effet quincunx / naturel
+  const xSpread = 40;
+  const decalX = (Math.random() - 0.5) * xSpread;
+  img.style.transform = `translateX(${decalX}px) translateX(-50%)`;
+
+  contenuVerre.appendChild(img);
 }
 
 // Bouton "Voir la recette"
@@ -98,8 +88,10 @@ document.getElementById('btn-random').onclick = () => {
   contenuVerre.innerHTML = "";
 
   const noms = Object.keys(recettes).sort(() => 0.5 - Math.random()).slice(0, 3);
-  fruitsChoisis = noms;
-  afficherFruits();
+  noms.forEach(nom => {
+    fruitsChoisis.push(nom);
+    ajouterFruit(nom);
+  });
 };
 
 // Bouton "Remettre le compteur à zéro"
