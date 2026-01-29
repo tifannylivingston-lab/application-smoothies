@@ -28,44 +28,20 @@ h1 {
 
 #verre {
   position: relative;
-  width: 700px; /* plus grand */
-  height: 850px; /* plus grand */
+  width: 300px;
+  height: 450px;
 }
 
 /* Contenu du verre (fruits) */
 #contenu-verre {
-  position: absolute;
-  bottom: 30px; 
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;  /* plus large pour 5 fruits */
-  height: 250px; /* plus haut pour que les fruits rentrent */
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
-  gap: 5px; /* espace entre les fruits */
-  z-index: 2; /* Fruits au-dessus du verre */
+  position: relative; /* pour position absolute des fruits */
+  width: 200px;
+  height: 250px;
+  margin: 0 auto;
+  z-index: 2;
   overflow: hidden;
-  border-radius: 90px 90px 25px 25px; /* arrondi type verre */
+  border-radius: 90px 90px 25px 25px;
   pointer-events: none;
-}
-
-/* Fruits animation */
-.fruit-verre {
-  width: 45px; /* tu peux augmenter si besoin */
-  animation: tomber 0.6s ease-out;
-  object-fit: contain;
-}
-
-@keyframes tomber {
-  from {
-    transform: translateY(-150px) scale(0.8);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
 }
 
 /* Image du verre */
@@ -75,20 +51,21 @@ h1 {
   position: absolute;
   bottom: 0;
   left: 0;
-  z-index: 1; /* Dessous les fruits */
+  z-index: 1;
   pointer-events: none;
 }
 
 /* Fruits animation */
 .fruit-verre {
   width: 45px;
+  position: absolute;
   animation: tomber 0.6s ease-out;
   object-fit: contain;
 }
 
 @keyframes tomber {
   from {
-    transform: translateY(-120px) scale(0.8);
+    transform: translateY(-150px) scale(0.8);
     opacity: 0;
   }
   to {
@@ -124,5 +101,3 @@ h1 {
 .compteur {
   margin-top: 30px;
 }
-
-
