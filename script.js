@@ -15,6 +15,9 @@ const recettes = {
   kiwi: "1 kiwi"
 };
 
+// Tableau pour mémoriser la position des fruits
+let bottomPositions = [];
+
 // Événements clic sur les fruits
 fruits.forEach(fruit => {
   fruit.addEventListener('click', () => {
@@ -43,13 +46,15 @@ function ajouterFruit(nom) {
   img.style.width = taille + 'px';
 
   // Calcul bottom = cumul des hauteurs des fruits déjà présents
-  let totalHauteur = 0;
-  contenuVerre.querySelectorAll('.fruit-verre').forEach(f => {
-    totalHauteur += f.offsetHeight * 0.9; // léger recouvrement
-  });
-  img.style.bottom = totalHauteur + 'px';
+  let bottom = 0; // premier fruit au fond du verre
+  if(bottomPositions.length > 0) {
+    const dernierBottom = bottomPositions[bottomPositions.length - 1];
+    bottom = dernierBottom + taille * 0.9; // empilement avec léger recouvrement
+  }
+  bottomPositions.push(bottom);
+  img.style.bottom = bottom + 'px';
 
-  // Décalage horizontal pour effet quincunx / naturel
+  // Décalage horizontal pour effet quincunx
   const xSpread = 40;
   const decalX = (Math.random() - 0.5) * xSpread;
   img.style.transform = `translateX(${decalX}px) translateX(-50%)`;
@@ -80,12 +85,14 @@ document.getElementById('btn-reset').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
   recetteDiv.innerHTML = "";
+  bottomPositions = []; // réinitialiser les positions
 };
 
 // Bouton "Recette aléatoire"
 document.getElementById('btn-random').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
+  bottomPositions = [];
 
   const noms = Object.keys(recettes).sort(() => 0.5 - Math.random()).slice(0, 3);
   noms.forEach(nom => {
