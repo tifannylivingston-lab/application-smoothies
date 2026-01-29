@@ -15,9 +15,6 @@ const recettes = {
   kiwi: "1 kiwi"
 };
 
-// Tableau pour mémoriser la position des fruits
-let bottomPositions = [];
-
 // Événements clic sur les fruits
 fruits.forEach(fruit => {
   fruit.addEventListener('click', () => {
@@ -28,7 +25,7 @@ fruits.forEach(fruit => {
   });
 });
 
-// Fonction pour ajouter un fruit individuellement
+// Fonction pour ajouter un fruit au verre
 function ajouterFruit(nom) {
   const img = document.createElement('img');
   img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
@@ -36,7 +33,7 @@ function ajouterFruit(nom) {
   img.style.position = 'absolute';
   img.style.left = '50%';
 
-  // Taille dynamique selon le nombre actuel de fruits
+  // Taille dynamique
   let nFruits = fruitsChoisis.length;
   let taille = 50;
   if(nFruits === 1) taille = 70;
@@ -45,16 +42,15 @@ function ajouterFruit(nom) {
   else if(nFruits >= 4) taille = 45;
   img.style.width = taille + 'px';
 
-  // Calcul bottom = cumul des hauteurs des fruits déjà présents
-  let bottom = 0; // premier fruit au fond du verre
-  if(bottomPositions.length > 0) {
-    const dernierBottom = bottomPositions[bottomPositions.length - 1];
-    bottom = dernierBottom + taille * 0.9; // empilement avec léger recouvrement
-  }
-  bottomPositions.push(bottom);
-  img.style.bottom = bottom + 'px';
+  // Calcul bottom cumulatif
+  let totalBottom = 0;
+  const enfants = contenuVerre.querySelectorAll('.fruit-verre');
+  enfants.forEach(f => {
+    totalBottom += parseFloat(f.style.width) * 0.9; // léger recouvrement
+  });
+  img.style.bottom = totalBottom + 'px';
 
-  // Décalage horizontal pour effet quincunx
+  // Décalage horizontal aléatoire pour quincunx naturel
   const xSpread = 40;
   const decalX = (Math.random() - 0.5) * xSpread;
   img.style.transform = `translateX(${decalX}px) translateX(-50%)`;
@@ -85,14 +81,12 @@ document.getElementById('btn-reset').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
   recetteDiv.innerHTML = "";
-  bottomPositions = []; // réinitialiser les positions
 };
 
 // Bouton "Recette aléatoire"
 document.getElementById('btn-random').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
-  bottomPositions = [];
 
   const noms = Object.keys(recettes).sort(() => 0.5 - Math.random()).slice(0, 3);
   noms.forEach(nom => {
