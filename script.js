@@ -18,18 +18,35 @@ const recettes = {
 fruits.forEach(fruit => {
   fruit.addEventListener('click', () => {
     if (fruitsChoisis.length >= 5) return;
-
-    const nom = fruit.dataset.fruit;
-    fruitsChoisis.push(nom);
-
-    const img = document.createElement('img');
-    img.src = fruit.src;
-    img.className = 'fruit-verre';
-
-    contenuVerre.appendChild(img);
+    fruitsChoisis.push(fruit.dataset.fruit);
+    afficherFruits();
   });
 });
 
+function afficherFruits() {
+  contenuVerre.innerHTML = ""; // vider avant de réafficher
+
+  // positions quincunx pour 5 fruits max
+  const positions = [
+    {x: -40, y: 0},
+    {x: 40, y: 0},
+    {x: -20, y: 50},
+    {x: 20, y: 50},
+    {x: 0, y: 100},
+  ];
+
+  fruitsChoisis.forEach((nom, i) => {
+    const img = document.createElement('img');
+    img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
+    img.className = 'fruit-verre';
+    img.style.left = '50%';
+    img.style.bottom = positions[i].y + 'px';
+    img.style.transform = `translateX(${positions[i].x}px)`;
+    contenuVerre.appendChild(img);
+  });
+}
+
+// Boutons
 document.getElementById('btn-recette').onclick = () => {
   if (fruitsChoisis.length < 2) {
     recetteDiv.innerHTML = "👉 Choisis au moins 2 fruits";
@@ -58,13 +75,8 @@ document.getElementById('btn-random').onclick = () => {
   contenuVerre.innerHTML = "";
 
   const noms = Object.keys(recettes).sort(() => 0.5 - Math.random()).slice(0, 3);
-  noms.forEach(nom => {
-    fruitsChoisis.push(nom);
-    const img = document.createElement('img');
-    img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
-    img.className = 'fruit-verre';
-    contenuVerre.appendChild(img);
-  });
+  fruitsChoisis = noms;
+  afficherFruits();
 };
 
 document.getElementById('reset-compteur').onclick = () => {
