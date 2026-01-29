@@ -26,22 +26,33 @@ fruits.forEach(fruit => {
 function afficherFruits() {
   contenuVerre.innerHTML = ""; // vider avant de réafficher
 
-  // positions quincunx pour 5 fruits max
-  const positions = [
-    {x: -40, y: 0},
-    {x: 40, y: 0},
-    {x: -20, y: 50},
-    {x: 20, y: 50},
-    {x: 0, y: 100},
-  ];
+  // calcul automatique des positions selon le nombre de fruits
+  const n = fruitsChoisis.length;
+  const yStart = 0; // base du verre
+  const yGap = 50;  // écart vertical entre lignes
+  const xSpread = 40; // écart horizontal maximal
 
   fruitsChoisis.forEach((nom, i) => {
     const img = document.createElement('img');
     img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
     img.className = 'fruit-verre';
+    img.style.position = 'absolute';
     img.style.left = '50%';
-    img.style.bottom = positions[i].y + 'px';
-    img.style.transform = `translateX(${positions[i].x}px)`;
+
+    // position verticale (espacement uniforme du bas vers le haut)
+    let y = yStart + Math.floor((i / n) * (n-1) * yGap);
+
+    // position horizontale (alternance gauche-droite autour du centre)
+    let x;
+    if (n === 1) x = 0;
+    else if (n === 2) x = i === 0 ? -xSpread/2 : xSpread/2;
+    else if (n === 3) x = i === 0 ? -xSpread : i === 1 ? xSpread : 0;
+    else if (n === 4) x = i === 0 ? -xSpread : i === 1 ? xSpread : i === 2 ? -xSpread/2 : xSpread/2;
+    else x = i === 0 ? -xSpread : i === 1 ? xSpread : i === 2 ? -xSpread/2 : i === 3 ? xSpread/2 : 0;
+
+    img.style.bottom = y + 'px';
+    img.style.transform = `translateX(${x}px)`;
+
     contenuVerre.appendChild(img);
   });
 }
@@ -89,3 +100,4 @@ document.getElementById('reset-compteur').onclick = () => {
     alert("Mot de passe incorrect ❌");
   }
 };
+
