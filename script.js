@@ -7,15 +7,24 @@ let fruitsChoisis = [];
 let compteur = localStorage.getItem('compteurSmoothie') || 0;
 compteurSpan.textContent = compteur;
 
-const recettes = {
-  pomme: "1/2 pomme",
-  poire: "1/2 poire",
-  clementine: "1 clémentine",
-  fraise: "4 fraises",
-  kiwi: "1 kiwi"
+// Quantités DE BASE pour 1 fruit dans un verre de 25–30 cl
+const baseRecettes = {
+  pomme: 0.5,
+  poire: 0.5,
+  clementine: 1,
+  fraise: 4,
+  kiwi: 1
 };
 
-// Événements clic sur les fruits
+const unite = {
+  pomme: "pomme",
+  poire: "poire",
+  clementine: "clémentine",
+  fraise: "fraise",
+  kiwi: "kiwi"
+};
+
+// Gestion clic fruits
 fruits.forEach(fruit => {
   fruit.addEventListener('click', () => {
     if (fruitsChoisis.length >= 5) return;
@@ -25,7 +34,7 @@ fruits.forEach(fruit => {
   });
 });
 
-// Fonction pour ajouter un fruit au verre
+// Ajout visuel fruit (inchangé, fonctionne bien)
 function ajouterFruit(nom) {
   const img = document.createElement('img');
   img.src = document.querySelector(`[data-fruit="${nom}"]`).src;
@@ -33,41 +42,55 @@ function ajouterFruit(nom) {
   img.style.position = 'absolute';
   img.style.left = '50%';
 
-  // Taille dynamique
-  let nFruits = fruitsChoisis.length;
-  let taille = 50;
-  if(nFruits === 1) taille = 70;
-  else if(nFruits === 2) taille = 60;
-  else if(nFruits === 3) taille = 55;
-  else if(nFruits >= 4) taille = 45;
+  let n = fruitsChoisis.length;
+  let taille = n === 1 ? 70 : n === 2 ? 60 : n === 3 ? 55 : 45;
   img.style.width = taille + 'px';
 
-  // Calcul bottom cumulatif
-  let totalBottom = 0;
-  const enfants = contenuVerre.querySelectorAll('.fruit-verre');
-  enfants.forEach(f => {
-    totalBottom += parseFloat(f.style.width) * 0.9; // léger recouvrement
+  let bottom = 0;
+  contenuVerre.querySelectorAll('.fruit-verre').forEach(f => {
+    bottom += parseFloat(f.style.width) * 0.9;
   });
-  img.style.bottom = totalBottom + 'px';
+  img.style.bottom = bottom + 'px';
 
-  // Décalage horizontal aléatoire pour quincunx naturel
-  const xSpread = 40;
-  const decalX = (Math.random() - 0.5) * xSpread;
+  const decalX = (Math.random() - 0.5) * 40;
   img.style.transform = `translateX(${decalX}px) translateX(-50%)`;
 
   contenuVerre.appendChild(img);
 }
 
-// Bouton "Voir la recette"
+// 📌 RECETTE ADAPTATIVE
 document.getElementById('btn-recette').onclick = () => {
   if (fruitsChoisis.length < 2) {
     recetteDiv.innerHTML = "👉 Choisis au moins 2 fruits";
     return;
   }
 
-  let texte = `<strong>Smoothie ${fruitsChoisis.length} fruits</strong><br>`;
-  fruitsChoisis.forEach(f => texte += `${recettes[f]}<br>`);
-  texte += "<br>Ajoute un peu d’eau ou de jus 🍹";
+  const n = fruitsChoisis.length;
+
+  // Coefficient d’ajustement (plus il y a de fruits, plus on réduit)
+  let coef = 1;
+  if (n === 2) coef = 1;
+  else if (n === 3) coef = 0.75;
+  else if (n === 4) coef = 0.6;
+  else if (n === 5) coef = 0.5;
+
+  let texte = `<strong>Smoothie équilibré (${n} fruits)</strong><br><br>`;
+
+  fruitsChoisis.forEach(fruit => {
+    let qte = baseRecettes[fruit] * coef;
+
+    // arrondis intelligents
+    if (fruit === "fraise") qte = Math.max(1, Math.round(qte));
+    else if (qte < 0.5) qte = "¼";
+    else if (qte === 0.5) qte = "½";
+    else qte = qte.toString().replace(".5", "½");
+
+    texte += `${qte} ${unite[fruit]}<br>`;
+  });
+
+  // Liquide adapté
+  let liquide = n <= 2 ? 120 : n === 3 ? 100 : 85;
+  texte += `<br>${liquide} ml d’eau ou de jus 🍹`;
 
   recetteDiv.innerHTML = texte;
 
@@ -76,26 +99,26 @@ document.getElementById('btn-recette').onclick = () => {
   compteurSpan.textContent = compteur;
 };
 
-// Bouton "Nouveau smoothie"
+// Reset
 document.getElementById('btn-reset').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
   recetteDiv.innerHTML = "";
 };
 
-// Bouton "Recette aléatoire"
+// Random
 document.getElementById('btn-random').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
 
-  const noms = Object.keys(recettes).sort(() => 0.5 - Math.random()).slice(0, 3);
+  const noms = Object.keys(baseRecettes).sort(() => 0.5 - Math.random()).slice(0, 3);
   noms.forEach(nom => {
     fruitsChoisis.push(nom);
     ajouterFruit(nom);
   });
 };
 
-// Bouton "Remettre le compteur à zéro"
+// Reset compteur
 document.getElementById('reset-compteur').onclick = () => {
   const mdp = prompt("Mot de passe propriétaire :");
   if (mdp === "smoothie2024") {
