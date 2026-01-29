@@ -28,26 +28,44 @@ h1 {
 
 #verre {
   position: relative;
-  width: 220px;
-  height: 350px;
+  width: 300px; /* plus grand */
+  height: 450px; /* plus grand */
 }
 
 /* Contenu du verre (fruits) */
 #contenu-verre {
   position: absolute;
-  bottom: 25px;
+  bottom: 30px; 
   left: 50%;
   transform: translateX(-50%);
-  width: 140px;
-  height: 180px;
+  width: 200px;  /* plus large pour 5 fruits */
+  height: 250px; /* plus haut pour que les fruits rentrent */
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
-  gap: 2px;
+  gap: 5px; /* espace entre les fruits */
   z-index: 2; /* Fruits au-dessus du verre */
   overflow: hidden;
-  border-radius: 70px 70px 20px 20px;
+  border-radius: 90px 90px 25px 25px; /* arrondi type verre */
   pointer-events: none;
+}
+
+/* Fruits animation */
+.fruit-verre {
+  width: 45px; /* tu peux augmenter si besoin */
+  animation: tomber 0.6s ease-out;
+  object-fit: contain;
+}
+
+@keyframes tomber {
+  from {
+    transform: translateY(-150px) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 /* Image du verre */
