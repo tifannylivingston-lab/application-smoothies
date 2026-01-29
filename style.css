@@ -37,6 +37,7 @@ h1 {
   height: auto;
   position: relative;
   z-index: 2;
+   pointer-events: none;
 }
 
 /* ZONE INTERIEURE DU VERRE */
@@ -60,6 +61,7 @@ h1 {
 .fruit-verre {
   width: 45px;
   animation: tomber 0.6s ease-out;
+  object-fit: contain; /* pour garder les proportions */
 }
 
 @keyframes tomber {
