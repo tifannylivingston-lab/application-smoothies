@@ -15,6 +15,7 @@ const recettes = {
   kiwi: "1 kiwi"
 };
 
+// Événements clic sur les fruits
 fruits.forEach(fruit => {
   fruit.addEventListener('click', () => {
     if (fruitsChoisis.length >= 5) return;
@@ -23,14 +24,14 @@ fruits.forEach(fruit => {
   });
 });
 
+// Fonction pour afficher les fruits en quincunx et ajuster la taille
 function afficherFruits() {
   contenuVerre.innerHTML = ""; // vider avant de réafficher
 
-  // calcul automatique des positions selon le nombre de fruits
   const n = fruitsChoisis.length;
-  const yStart = 0; // base du verre
-  const yGap = 50;  // écart vertical entre lignes
-  const xSpread = 40; // écart horizontal maximal
+  const baseY = 10; // distance depuis le fond du verre
+  const hauteurVerre = 250; // hauteur de #contenu-verre
+  const xSpread = 40; // écart horizontal max
 
   fruitsChoisis.forEach((nom, i) => {
     const img = document.createElement('img');
@@ -39,10 +40,19 @@ function afficherFruits() {
     img.style.position = 'absolute';
     img.style.left = '50%';
 
-    // position verticale (espacement uniforme du bas vers le haut)
-    let y = yStart + Math.floor((i / n) * (n-1) * yGap);
+    // Ajustement dynamique de la taille selon le nombre de fruits
+    let taille = 50; // par défaut
+    if(n === 1) taille = 70;
+    else if(n === 2) taille = 60;
+    else if(n === 3) taille = 55;
+    else if(n >= 4) taille = 45;
+    img.style.width = taille + 'px';
 
-    // position horizontale (alternance gauche-droite autour du centre)
+    // position verticale proportionnelle depuis le bas
+    let y = baseY + (i / n) * (hauteurVerre - taille - 20); 
+    // 20 pour laisser un petit espace en haut
+
+    // position horizontale quincunx
     let x;
     if (n === 1) x = 0;
     else if (n === 2) x = i === 0 ? -xSpread/2 : xSpread/2;
@@ -57,7 +67,7 @@ function afficherFruits() {
   });
 }
 
-// Boutons
+// Bouton "Voir la recette"
 document.getElementById('btn-recette').onclick = () => {
   if (fruitsChoisis.length < 2) {
     recetteDiv.innerHTML = "👉 Choisis au moins 2 fruits";
@@ -75,12 +85,14 @@ document.getElementById('btn-recette').onclick = () => {
   compteurSpan.textContent = compteur;
 };
 
+// Bouton "Nouveau smoothie"
 document.getElementById('btn-reset').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
   recetteDiv.innerHTML = "";
 };
 
+// Bouton "Recette aléatoire"
 document.getElementById('btn-random').onclick = () => {
   fruitsChoisis = [];
   contenuVerre.innerHTML = "";
@@ -90,6 +102,7 @@ document.getElementById('btn-random').onclick = () => {
   afficherFruits();
 };
 
+// Bouton "Remettre le compteur à zéro"
 document.getElementById('reset-compteur').onclick = () => {
   const mdp = prompt("Mot de passe propriétaire :");
   if (mdp === "smoothie2024") {
@@ -100,4 +113,3 @@ document.getElementById('reset-compteur').onclick = () => {
     alert("Mot de passe incorrect ❌");
   }
 };
-
