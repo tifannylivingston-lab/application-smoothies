@@ -32,15 +32,6 @@ h1 {
   height: 350px;
 }
 
-/* Verre bas (fond et bords) */
-#verre-img {
-  width: 100%;
-  height: auto;
-  position: relative;
-  z-index: 1;
-  pointer-events: none;
-}
-
 /* Contenu du verre (fruits) */
 #contenu-verre {
   position: absolute;
@@ -53,9 +44,20 @@ h1 {
   flex-direction: column-reverse;
   align-items: center;
   gap: 2px;
-  z-index: 2; /* Fruits au-dessus du bas du verre */
+  z-index: 2; /* Fruits au-dessus du verre */
   overflow: hidden;
   border-radius: 70px 70px 20px 20px;
+  pointer-events: none;
+}
+
+/* Image du verre */
+#verre-img {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1; /* Dessous les fruits */
   pointer-events: none;
 }
 
@@ -75,17 +77,6 @@ h1 {
     transform: translateY(0) scale(1);
     opacity: 1;
   }
-}
-
-/* Verre haut (bords supérieurs) */
-#verre-haut {
-  width: 100%;
-  height: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3; /* Dessus fruits */
-  pointer-events: none;
 }
 
 .actions button {
